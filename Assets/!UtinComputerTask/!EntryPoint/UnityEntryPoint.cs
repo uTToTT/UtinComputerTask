@@ -10,4 +10,9 @@ public class UnityEntryPoint : MonoBehaviour
 
         obstaclesController.Init();
     }
+
+    private void Update()
+    {
+        /// Tick.Update(dt)
+    }
 }
