@@ -43,19 +43,33 @@ public class ShotController
     {
         float radius = _shot.Radius;
 
+        /// ref: use OverlapSphereNonAlloc()
         Collider[] hits = Physics.OverlapSphere(_shot.Position, radius);
+
+        float minSqrDistance = float.MaxValue;
+        IInfectable closest = null;
 
         foreach (var hit in hits)
         {
-            if (hit.TryGetComponent<ObstacleView>(out var view))
+            if (!hit.TryGetComponent<ObstacleView>(out var view))
+                continue;
+
+            if (!view.TryGetInfectable(out var infectable))
+                continue;
+
+            float sqrDistance = (hit.transform.position - _shot.Position).sqrMagnitude;
+
+            if (sqrDistance < minSqrDistance)
             {
-                if (view.TryGetInfectable(out var infectable))
-                {
-                    infectable.Infect(radius);
-                    Explode();
-                    return;
-                }
+                minSqrDistance = sqrDistance;
+                closest = infectable;
             }
+        }
+
+        if (closest != null)
+        {
+            closest.Infect(radius);
+            Explode();
         }
     }
 

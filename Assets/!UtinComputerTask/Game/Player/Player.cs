@@ -5,8 +5,9 @@ public class Player
     private readonly IPlayerView _view;
 
     public float Mass { get; set; }
-    public float Radius => Mass;
+    public float Radius => Mathf.Sqrt(Mass);
     public Vector3 Position => _view.Position;
+    public Vector3 GroundPosition => _view.GroundPosition;
 
     public Player(
         IPlayerView view,

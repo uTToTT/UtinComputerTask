@@ -20,4 +20,13 @@ public class ShotFactory
 
         return controller;
     }
+
+    public IShotView CreatePreview(Vector3 position)
+    {
+        var view = Object.Instantiate(_prefab, position, Quaternion.identity);
+
+        view.SetActive(true);
+
+        return view;
+    }
 }

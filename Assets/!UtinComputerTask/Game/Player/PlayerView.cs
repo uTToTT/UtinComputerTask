@@ -5,6 +5,7 @@ public class PlayerView : MonoBehaviour, IPlayerView
     [SerializeField] private Transform _visual;
 
     public Vector3 Position => transform.position;
+    public Vector3 GroundPosition => new Vector3(transform.position.x, 0, transform.position.z);
 
     #region Init
 

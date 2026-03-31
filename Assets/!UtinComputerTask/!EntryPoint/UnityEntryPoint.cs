@@ -14,6 +14,7 @@ public class UnityEntryPoint : MonoBehaviour, IDisposable
     [SerializeField] private TargetView _targetView;
     [SerializeField] private PlayerView _playerView;
     [SerializeField] private ShotView _shotPrefab;
+    [SerializeField] private PathView _pathView;
 
     private IInputProvider _inputProvider;
 
@@ -37,7 +38,8 @@ public class UnityEntryPoint : MonoBehaviour, IDisposable
             _inputProvider,
             shotFactory,
             _shotManager,
-            _targetView
+            _targetView,
+            _pathView
         );
 
         _obstaclesController.Init(); /// ref
