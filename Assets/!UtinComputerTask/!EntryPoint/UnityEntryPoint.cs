@@ -1,7 +1,8 @@
+using System;
 using UnityEngine;
 
 // Requiered in refactoring: add DI Container, divide on GameBootstrap and installers
-public class UnityEntryPoint : MonoBehaviour
+public class UnityEntryPoint : MonoBehaviour, IDisposable
 {
     [Header("Test")]
     [SerializeField] private ObstaclesController _obstaclesController;
@@ -18,6 +19,7 @@ public class UnityEntryPoint : MonoBehaviour
 
     private PlayerController _playerController;
     private ShotManager _shotManager;
+    private GameLoop _gameLoop;
 
     private void Awake()
     {
@@ -26,6 +28,8 @@ public class UnityEntryPoint : MonoBehaviour
 
         _shotManager = new ShotManager();
         _inputProvider = new InputProvider(_camera);
+        _inputProvider.Enable();
+        _gameLoop = new GameLoop();
 
         _playerController = new PlayerController(
             player,
@@ -36,18 +40,18 @@ public class UnityEntryPoint : MonoBehaviour
             _targetView
         );
 
-        _obstaclesController.Init();
+        _obstaclesController.Init(); /// ref
 
-        StartGame();
-    }
+        _playerController.OnOutOfMass += _gameLoop.Defeat;
+        _playerController.OnReachTarget += _gameLoop.Victory;
 
-    private void StartGame()
-    {
-        _inputProvider.Enable();
+        _gameLoop.StartGame();
     }
 
     private void Update()
     {
+        if (!_gameLoop.IsGameStarted) return;
+
         float dt = Time.deltaTime;
 
         _playerController.Tick(dt);
@@ -57,5 +61,11 @@ public class UnityEntryPoint : MonoBehaviour
     private void LateUpdate()
     {
         _inputProvider.LateUpdate();
+    }
+
+    public void Dispose()
+    {
+        _playerController.OnOutOfMass -= _gameLoop.Defeat;
+        _playerController.OnReachTarget -= _gameLoop.Victory;
     }
 }
