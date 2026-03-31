@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using UnityEngine;
 
-public class ShotManager : MonoBehaviour
+public class ShotManager 
 {
     private readonly List<ShotController> _shots = new();
 
@@ -10,11 +9,10 @@ public class ShotManager : MonoBehaviour
         _shots.Add(shot);
     }
 
-    // ref: TickController.Tick() 
-    private void Update() 
-    {
-        float dt = Time.deltaTime;
+    /// Remove
 
+    public void Tick(float dt) 
+    {
         for (int i = _shots.Count - 1; i >= 0; i--)
         {
             _shots[i].Tick(dt);

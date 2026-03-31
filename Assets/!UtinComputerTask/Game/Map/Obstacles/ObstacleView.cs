@@ -25,7 +25,6 @@ public class ObstacleView : MonoBehaviour, IObstacleView
 
     public void SetColor(Color color)
     {
-        Debug.Log($"Color set [{color}]");
         _meshRenderer.material.SetColor(_colorId, color);
     }
 

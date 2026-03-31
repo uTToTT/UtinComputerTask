@@ -1,5 +1,7 @@
 using UnityEngine;
 
+
+// TODO: Add move range limit
 public class ShotController
 {
     private readonly IShotView _view;
