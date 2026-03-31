@@ -7,16 +7,34 @@ public class ObstacleView : MonoBehaviour, IObstacleView
     [SerializeField] private MeshRenderer _meshRenderer;
     [SerializeField] private Collider _collider;
 
-    private static readonly int _colorId = Shader.PropertyToID("_Color");
+    private static readonly int _colorId = Shader.PropertyToID("_BaseColor");
+    private Obstacle _obstacle;
 
-    #region Unity API
+    public Vector3 Position => transform.position;
+
+    #region Init
+
+    public void Init(Obstacle obstacle)
+    {
+        _obstacle = obstacle;
+    }
 
     private void Reset() => InitComponents();
 
     #endregion
 
-    public void SetColor(Color color) => _meshRenderer.sharedMaterial.SetColor(_colorId, color);
+    public void SetColor(Color color)
+    {
+        Debug.Log($"Color set [{color}]");
+        _meshRenderer.material.SetColor(_colorId, color);
+    }
+
     public void SetColliderEnabled(bool state) => _collider.enabled = state;
+    public bool TryGetInfectable(out IInfectable infectable)
+    {
+        infectable = _obstacle;
+        return infectable != null;
+    }
 
     private void InitComponents()
     {
