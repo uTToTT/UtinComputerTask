@@ -18,6 +18,7 @@ public class Shot
 
     public Vector3 Position => _view.Position;
     public void Deactivate() => _view.SetActive(false);
+    public void Destroy() => _view.Destroy();
     public void AddMass(float delta)
     {
         Mass += delta;

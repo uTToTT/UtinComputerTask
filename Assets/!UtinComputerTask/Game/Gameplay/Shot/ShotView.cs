@@ -18,6 +18,7 @@ public class ShotView : MonoBehaviour, IShotView
     #endregion
 
     public void SetScale(float scale) => transform.localScale = Vector3.one * scale;
-    public void SetActive(bool state) => gameObject.SetActive(state);
+    public void SetActive(bool state) => gameObject.SetActive(state); // 
+    public void Destroy() => Destroy(gameObject); // ref: ObjectPool
     public void SetPosition(Vector3 pos) => transform.position = pos;
 }

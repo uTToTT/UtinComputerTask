@@ -7,15 +7,20 @@ public class ShotManager
     public void Add(ShotController shot)
     {
         _shots.Add(shot);
+        shot.OnDead += Remove;
     }
 
-    /// Remove
+    private void Remove(ShotController shot)
+    {
+        _shots.Remove(shot);
+    }
 
-    public void Tick(float dt) 
+    public void Tick(float dt)
     {
         for (int i = _shots.Count - 1; i >= 0; i--)
         {
-            _shots[i].Tick(dt);
+            var shot = _shots[i];
+            shot.Tick(dt);
         }
     }
 }

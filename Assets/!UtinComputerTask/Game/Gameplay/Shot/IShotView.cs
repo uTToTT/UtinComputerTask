@@ -6,4 +6,5 @@ public interface IShotView
     void SetScale(float scale);
     void SetPosition(Vector3 pos);
     void SetActive(bool state);
+    void Destroy();
 }

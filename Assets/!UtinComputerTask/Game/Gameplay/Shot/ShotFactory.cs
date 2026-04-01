@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-// ref: change to ScriptableObject
+// ref: change to ScriptableObject, add objecpool
 public class ShotFactory
 {
     private readonly ShotView _prefab;

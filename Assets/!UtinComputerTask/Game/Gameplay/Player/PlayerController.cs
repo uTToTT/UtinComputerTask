@@ -1,21 +1,25 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// ref: outroot Charging and Movement logic
+/// </summary>
 public class PlayerController
 {
     public event Action OnOutOfMass;
     public event Action OnReachTarget;
+    public event Action<float> OnGroundedMass;
 
+    private const float WIN_DISTANCE = 0.5f;
 
     /// <summary>
     /// ref: use data-driven approach based on ScriptableObject
     /// </summary>
-    private const float MIN_MASS = 0.2f;
-    private const float CHARGE_SPEED = 1f;
-    private const float WIN_DISTANCE = 0.5f;
+    //private const float MIN_MASS = 0.2f;
+    //private const float CHARGE_SPEED = 1f;
 
-    private const float JUMP_DURATION = 0.5f;
-    private const float JUMP_HEIGHT = 1f;
+    //private const float JUMP_DURATION = 0.5f;
+    //private const float JUMP_HEIGHT = 1f;
     /// 
 
     private readonly Player _player;
@@ -94,7 +98,7 @@ public class PlayerController
     {
         float dist = Vector3.Distance(_player.Position, _target.Position);
 
-        if (dist < WIN_DISTANCE)
+        if (dist <  WIN_DISTANCE)
         {
             OnReachTarget?.Invoke();
         }
@@ -109,7 +113,6 @@ public class PlayerController
         if (_isJumping)
         {
             UpdateJump(dt);
-            Debug.Log("Jump");
             return;
         }
 
@@ -169,17 +172,19 @@ public class PlayerController
     {
         _jumpTime += dt;
 
-        float t = _jumpTime / JUMP_DURATION;
+        float t = _jumpTime / _player.Config.JumpDuration;
 
         if (t >= 1f)
         {
             _player.SetPosition(_jumpEnd);
             _isJumping = false;
+            OnGroundedMass?.Invoke(_player.Mass);
+            Debug.Log("Grounded");
             return;
         }
 
         Vector3 pos = Vector3.Lerp(_jumpStart, _jumpEnd, t);
-        float height = Mathf.Sin(t * Mathf.PI) * JUMP_HEIGHT;
+        float height = Mathf.Sin(t * Mathf.PI) * _player.Config.JumpHeight;
 
         pos.y += height;
 
@@ -192,7 +197,7 @@ public class PlayerController
 
     public void StartCharge()
     {
-        if (_player.Mass <= MIN_MASS) return;
+        if (_player.Mass <= _player.Config.MinMass) return;
         _isCharging = true;
         _charge = 0f;
 
@@ -204,10 +209,10 @@ public class PlayerController
     {
         if (!_isCharging) return;
 
-        float chargeDelta = CHARGE_SPEED * dt;
+        float chargeDelta = _player.Config.ChargeSpeed * dt;
 
-        if (chargeDelta > _player.Mass - MIN_MASS)
-            chargeDelta = _player.Mass - MIN_MASS;
+        if (chargeDelta > _player.Mass - _player.Config.MinMass)
+            chargeDelta = _player.Mass - _player.Config.MinMass;
 
         _charge += chargeDelta;
         _player.Mass -= chargeDelta;
@@ -220,7 +225,7 @@ public class PlayerController
             _player.Position + direction * (_player.Radius + _previewShot.Radius)
         );
 
-        if (_player.Mass <= MIN_MASS)
+        if (_player.Mass <= _player.Config.MinMass)
         {
             _isCharging = false;
             OnOutOfMass?.Invoke();

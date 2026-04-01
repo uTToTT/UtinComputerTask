@@ -1,15 +1,21 @@
+using System;
 using UnityEngine;
 
-
-// TODO: Add move range limit
 public class ShotController
 {
+    public event Action<ShotController> OnDead;
+
+    private const float MAX_LIFE_TIME = 5f;
+
     private readonly IShotView _view;
     private readonly Shot _shot;
     private readonly Vector3 _direction;
     private readonly float _speed;
 
     private bool _isActive = true;
+    private float _lifeTime;
+
+    public bool IsAlive => _isActive;
 
     public ShotController(
         Shot shot,
@@ -26,6 +32,8 @@ public class ShotController
     public void Tick(float dt)
     {
         if (!_isActive) return;
+        if (_lifeTime >= MAX_LIFE_TIME) Explode();
+        _lifeTime += dt;
 
         Move(dt);
         CheckCollision();
@@ -75,6 +83,8 @@ public class ShotController
 
     private void Explode()
     {
+        if (!_isActive) return;
+
         _isActive = false;
 
 #if UNITY_EDITOR
@@ -82,5 +92,7 @@ public class ShotController
 #endif
 
         _shot.Deactivate();
+        _shot.Destroy(); // ref: ObjectPool;
+        OnDead?.Invoke(this);
     }
 }

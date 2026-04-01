@@ -2,7 +2,12 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Requiered in refactoring: add DI Container, divide on GameBootstrap and installers
+/// <summary>
+/// TODO: 
+/// - DI Container
+/// - Divide on GameBootstrap and installers
+/// - Implement SctiptableObjects Configs
+/// </summary>
 public class UnityEntryPoint : MonoBehaviour, IDisposable
 {
     [Header("Test")]
@@ -22,6 +27,9 @@ public class UnityEntryPoint : MonoBehaviour, IDisposable
     [Header("UI")]
     [SerializeField] private WindowController _windowController;
 
+    [Header("Configs")]
+    [SerializeField] private PlayerConfig _playerConfig;
+
     private IInputProvider _inputProvider;
 
     private PlayerController _playerController;
@@ -29,11 +37,12 @@ public class UnityEntryPoint : MonoBehaviour, IDisposable
     private GameLoop _gameLoop;
     private Gate _gate;
     private InfectionController _infectionController;
+    private CameraShaker _cameraShaker;
 
     private void Awake()
     {
         var shotFactory = new ShotFactory(_shotPrefab);
-        var player = new Player(_playerView, 10f);
+        var player = new Player(_playerView, _playerConfig);
 
         _shotManager = new ShotManager();
         _inputProvider = new InputProvider(_camera);
@@ -41,7 +50,8 @@ public class UnityEntryPoint : MonoBehaviour, IDisposable
         _gameLoop = new GameLoop(_restartButton);
         _gate = new Gate(_gateView, _playerView);
         _infectionController = new InfectionController();
-
+        _cameraShaker = new CameraShaker(_camera);
+        
         _playerController = new PlayerController(
             player,
             _playerView,
@@ -59,6 +69,8 @@ public class UnityEntryPoint : MonoBehaviour, IDisposable
 
         _gameLoop.OnVictory += _windowController.EnableWinWindow;
         _gameLoop.OnDefeat += _windowController.EnableLoseWindow;
+
+        _playerController.OnGroundedMass += _cameraShaker.Shake;
 
         _gameLoop.StartGame();
     }
@@ -86,5 +98,7 @@ public class UnityEntryPoint : MonoBehaviour, IDisposable
 
         _gameLoop.OnVictory -= _windowController.EnableWinWindow;
         _gameLoop.OnDefeat -= _windowController.EnableLoseWindow;
+
+        _playerController.OnGroundedMass -= _cameraShaker.Shake;
     }
 }

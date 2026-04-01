@@ -586,6 +586,7 @@ MonoBehaviour:
   _pathView: {fileID: 1902208314}
   _gateView: {fileID: 5910006865228744245}
   _windowController: {fileID: 1700121584}
+  _playerConfig: {fileID: 11400000, guid: c5e18367ba73f504b811d7f38ff6a743, type: 2}
 --- !u!4 &133291341
 Transform:
   m_ObjectHideFlags: 0
