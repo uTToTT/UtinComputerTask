@@ -13,6 +13,7 @@ public class UnityEntryPoint : MonoBehaviour, IDisposable
     [Header("Test")]
     [SerializeField] private ObstaclesController _obstaclesController;
     [SerializeField] private Button _restartButton;
+    [SerializeField, Min(1)] private int _targetFPS = 60;
 
     [Header("Scene context")]
     [SerializeField] private Camera _camera;
@@ -41,6 +42,9 @@ public class UnityEntryPoint : MonoBehaviour, IDisposable
 
     private void Awake()
     {
+        Application.targetFrameRate = _targetFPS;
+        QualitySettings.vSyncCount = 0; 
+
         var shotFactory = new ShotFactory(_shotPrefab);
         var player = new Player(_playerView, _playerConfig);
 

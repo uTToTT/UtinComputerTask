@@ -179,7 +179,6 @@ public class PlayerController
             _player.SetPosition(_jumpEnd);
             _isJumping = false;
             OnGroundedMass?.Invoke(_player.Mass);
-            Debug.Log("Grounded");
             return;
         }
 

@@ -17,8 +17,6 @@ public class CameraShaker
 
     public void Shake(float power)
     {
-        Debug.Log("Shake");
-
         float strength = Mathf.Clamp(power, 0.1f, 3f);
 
         if (_shakeTween != null && _shakeTween.IsActive())
