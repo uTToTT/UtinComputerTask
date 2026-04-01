@@ -6,6 +6,7 @@ public class ObstacleView : MonoBehaviour, IObstacleView
 {
     [SerializeField] private MeshRenderer _meshRenderer;
     [SerializeField] private Collider _collider;
+    [SerializeField] private ParticleSystem _particles;
 
     private static readonly int _colorId = Shader.PropertyToID("_BaseColor");
     private Obstacle _obstacle;
@@ -30,6 +31,14 @@ public class ObstacleView : MonoBehaviour, IObstacleView
 
     public void SetColliderEnabled(bool state) => _collider.enabled = state;
     public void SetActive(bool state) => gameObject.SetActive(state);
+    public void Destroy() // only for test. Better use VFXController and ObjectPool
+    {
+        _meshRenderer.enabled = false;
+        _collider.enabled = false;
+
+        Destroy(gameObject, 5);
+        _particles.Play();
+    }
     public bool TryGetInfectable(out IInfectable infectable)
     {
         infectable = _obstacle;

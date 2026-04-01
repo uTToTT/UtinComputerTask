@@ -21,7 +21,7 @@ public class Obstacle : IInfectable
 
         _infected = true;
 
-        _view.SetColor(Color.red);
+        _view.SetColor(Color.blue); // ref: color to data-driven
         //_view.SetColliderEnabled(false);
 
         _ = _infectionController.SpreadAsync(this, power);
@@ -30,6 +30,7 @@ public class Obstacle : IInfectable
     public void Explode()
     {
         /// Ref: implement objectPool
-        _view.SetActive(false);
+        //_view.SetActive(false);
+        _view.Destroy();
     }
 }

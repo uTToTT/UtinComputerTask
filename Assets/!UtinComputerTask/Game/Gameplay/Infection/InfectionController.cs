@@ -4,13 +4,14 @@ using UnityEngine;
 public class InfectionController
 {
     private const float INFECTION_DIVIDER_POWER = 0.8f;
-    private const float SPREAD_DELAY = 0.5f;
+    private const float MIN_SPREAD_DELAY = 0.4f;
+    private const float MAX_SPREAD_DELAY = 0.75f;
 
     private readonly Collider[] _buffer = new Collider[32]; 
 
     public async Task SpreadAsync(IInfectable sourceView, float power)
     {
-        await Awaitable.WaitForSecondsAsync(SPREAD_DELAY);
+        await Awaitable.WaitForSecondsAsync(Random.Range(MIN_SPREAD_DELAY, MAX_SPREAD_DELAY));
 
         float radius = power;
 
@@ -37,7 +38,7 @@ public class InfectionController
             }
         }
 
-        await Awaitable.WaitForSecondsAsync(SPREAD_DELAY);
+        await Awaitable.WaitForSecondsAsync(Random.Range(MIN_SPREAD_DELAY, MAX_SPREAD_DELAY));
         sourceView.Explode();
     }
 }

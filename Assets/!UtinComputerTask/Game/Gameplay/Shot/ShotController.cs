@@ -91,7 +91,7 @@ public class ShotController
         GizmosService.Instance.DrawSphere(_shot.Position, _shot.Radius, Color.red, 0.2f);
 #endif
 
-        _shot.Deactivate();
+        //_shot.Deactivate();
         _shot.Destroy(); // ref: ObjectPool;
         OnDead?.Invoke(this);
     }

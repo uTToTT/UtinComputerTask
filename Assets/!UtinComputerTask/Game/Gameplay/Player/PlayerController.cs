@@ -133,7 +133,7 @@ public class PlayerController
             _player.Radius,
             direction,
             out var hit,
-            _player.Radius * 2f,
+            distance,
             LayerMask.GetMask(ObstaclesController.OBSTACLE_LAYERMASK)))
         {
             if (hit.collider.TryGetComponent<ObstacleView>(out _))

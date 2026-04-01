@@ -75,6 +75,7 @@ public class UnityEntryPoint : MonoBehaviour, IDisposable
         _gameLoop.OnDefeat += _windowController.EnableLoseWindow;
 
         _playerController.OnGroundedMass += _cameraShaker.Shake;
+        _playerController.OnGroundedMass += _playerView.PlayGrounded;
 
         _gameLoop.StartGame();
     }
@@ -104,5 +105,6 @@ public class UnityEntryPoint : MonoBehaviour, IDisposable
         _gameLoop.OnDefeat -= _windowController.EnableLoseWindow;
 
         _playerController.OnGroundedMass -= _cameraShaker.Shake;
+        _playerController.OnGroundedMass -= _playerView.PlayGrounded;
     }
 }
