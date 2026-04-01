@@ -2,7 +2,7 @@
 
 This project was created for UtinComputer Test Task on a Middle Unity Developer position.
 
-Projecr preview: https://youtube.com/shorts/-627bO_erTc?si=145m564jcKSrJr-6)
+Projecr preview: https://youtube.com/shorts/-627bO_erTc?si=145m564jcKSrJr-6
 
 Controls:  
 - Hold tap: charge shot (mass transfers into projectile)  
