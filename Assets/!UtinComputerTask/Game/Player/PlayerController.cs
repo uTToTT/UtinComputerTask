@@ -12,7 +12,6 @@ public class PlayerController
     /// </summary>
     private const float MIN_MASS = 0.2f;
     private const float CHARGE_SPEED = 1f;
-    private const float PATH_CHECK_RADIUS = 0f;
     private const float WIN_DISTANCE = 0.5f;
 
     private const float JUMP_DURATION = 0.5f;
@@ -86,7 +85,7 @@ public class PlayerController
         Vector3 from = _player.GroundPosition;
         Vector3 to = _target.GroundPosition;
 
-        float width = _player.Radius * 0.5f;
+        float width = _player.Radius * 2;
 
         _pathView.Draw(from, to, width);
     }
@@ -107,10 +106,10 @@ public class PlayerController
     {
         UpdatePath();
 
-
         if (_isJumping)
         {
             UpdateJump(dt);
+            Debug.Log("Jump");
             return;
         }
 
@@ -123,37 +122,41 @@ public class PlayerController
     private bool IsPathClear()
     {
         Vector3 direction = (_target.Position - _player.Position).normalized;
+        float distance = _player.Radius * 4f;
+        bool result = true;
 
-        float checkDistance = _player.Radius + 0.5f;
-
-        Vector3 checkPos = _player.Position + direction * checkDistance;
-
-        Collider[] hits = Physics.OverlapSphere(checkPos, _player.Radius + PATH_CHECK_RADIUS);
-
-#if UNITY_EDITOR
-        GizmosService.Instance.DrawSphere(
-            _player.Position + direction * checkDistance,
-            _player.Radius + PATH_CHECK_RADIUS,
-            Color.green,
-            0.05f);
-#endif
-
-        foreach (var hit in hits)
+        if (Physics.SphereCast(
+            _player.Position,
+            _player.Radius,
+            direction,
+            out var hit,
+            _player.Radius * 2f,
+            LayerMask.GetMask(ObstaclesController.OBSTACLE_LAYERMASK)))
         {
-            if (hit.TryGetComponent<ObstacleView>(out _))
-            {
-                return false;
-            }
+            if (hit.collider.TryGetComponent<ObstacleView>(out _))
+                result = false;
         }
 
-        return true;
+#if UNITY_EDITOR
+        GizmosService.Instance.DrawSphereCast(
+            _player.Position,
+            direction,
+            distance,
+            _player.Radius,
+            Color.yellow,
+            0.1f);
+#endif
+
+        return result;
     }
 
     private void StartJump()
     {
+        float distance = Vector3.Distance(_target.Position, _player.Position);
+
         Vector3 direction = (_target.Position - _player.Position).normalized;
 
-        float stepDistance = _player.Radius * 2f;
+        float stepDistance =Mathf.Min( _player.Radius * 2f,distance);
 
         _jumpStart = _player.Position;
         _jumpEnd = _jumpStart + direction * stepDistance;
@@ -209,7 +212,7 @@ public class PlayerController
         _charge += chargeDelta;
         _player.Mass -= chargeDelta;
 
-        _view.SetScale(_player.Radius); /// ref: scale != mass != radius
+        _view.SetScale(_player.Radius * 2); /// ref: scale != mass != radius
         _previewShot.AddMass(chargeDelta);
         Vector3 direction = (_target.Position - _player.Position).normalized;
 

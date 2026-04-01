@@ -1,7 +1,9 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class GameLoop 
+public class GameLoop : IDisposable
 {
     public event Action OnStopGame;
     public event Action OnStartGame;
@@ -9,8 +11,16 @@ public class GameLoop
     public event Action OnDefeat;
 
     private bool _isGameStarted = false;
+    private Button _restart;
 
     public bool IsGameStarted => _isGameStarted;
+
+    //ref: replace UI logic. This approach only for tests
+    public GameLoop(Button restart)
+    {
+        _restart = restart;
+        _restart.onClick.AddListener(Restart);
+    }
 
     public void Victory()
     {
@@ -40,5 +50,16 @@ public class GameLoop
 
         _isGameStarted = false;
         OnStopGame?.Invoke();
+    }
+
+    public void Restart()
+    {
+        int index = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(index);
+    }
+
+    public void Dispose()
+    {
+        _restart.onClick.RemoveAllListeners();
     }
 }

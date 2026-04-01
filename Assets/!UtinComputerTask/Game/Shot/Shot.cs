@@ -5,14 +5,14 @@ public class Shot
     private readonly IShotView _view;
 
     public float Mass { get; private set; }
-    public float Radius => Mass;
+    public float Radius => Mathf.Sqrt(Mass);
 
     public Shot(IShotView view, float mass)
     {
         _view = view;
         Mass = mass;
 
-        _view.SetScale(Radius);
+        _view.SetScale(Radius * 2);
         _view.SetActive(true);
     }
 
@@ -21,6 +21,6 @@ public class Shot
     public void AddMass(float delta)
     {
         Mass += delta;
-        _view.SetScale(Mathf.Max(Radius, 0.05f)); 
+        _view.SetScale(Mathf.Max(Radius, 0.05f) * 2); 
     }
 }

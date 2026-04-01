@@ -6,5 +6,6 @@ public interface IObstacleView
 
     void SetColor(Color color);
     void SetColliderEnabled(bool state);
+    void SetActive(bool state);
     bool TryGetInfectable(out IInfectable infectable);
 }

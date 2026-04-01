@@ -29,6 +29,7 @@ public class ObstacleView : MonoBehaviour, IObstacleView
     }
 
     public void SetColliderEnabled(bool state) => _collider.enabled = state;
+    public void SetActive(bool state) => gameObject.SetActive(state);
     public bool TryGetInfectable(out IInfectable infectable)
     {
         infectable = _obstacle;
@@ -43,4 +44,6 @@ public class ObstacleView : MonoBehaviour, IObstacleView
         if (_collider == null)
             _collider = GetComponent<Collider>();
     }
+
+    
 }

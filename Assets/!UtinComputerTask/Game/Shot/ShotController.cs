@@ -68,7 +68,7 @@ public class ShotController
 
         if (closest != null)
         {
-            closest.Infect(radius);
+            closest.Infect(radius * 1.5f);
             Explode();
         }
     }

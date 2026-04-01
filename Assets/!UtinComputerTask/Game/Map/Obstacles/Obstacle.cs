@@ -1,17 +1,18 @@
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class Obstacle : IInfectable
 {
-    private const float INFECTION_DIVIDER_POWER = 0.8f;
-
     private readonly IObstacleView _view;
+    private readonly InfectionController _infectionController;
 
     private bool _infected;
 
-    public Obstacle(IObstacleView view)
+    public Vector3 Position => _view.Position;
+
+    public Obstacle(IObstacleView view, InfectionController infectionController)
     {
         _view = view;
+        _infectionController = infectionController;
     }
 
     public void Infect(float power)
@@ -20,37 +21,15 @@ public class Obstacle : IInfectable
 
         _infected = true;
 
-        _view.SetColor(Color.red); /// ref
-        _view.SetColliderEnabled(false);
+        _view.SetColor(Color.red);
+        //_view.SetColliderEnabled(false);
 
-        _ = SpreadInfection(power);
+        _ = _infectionController.SpreadAsync(this, power);
     }
 
-    // ref: add InfectionController
-    public async Task SpreadInfection(float power)
+    public void Explode()
     {
-        Debug.Log("Spread");
-        await Awaitable.WaitForSecondsAsync(0.5f);
-
-        float radius = power;
-
-        // ref to OverlapSphereNonAlloc
-        Collider[] hits = Physics.OverlapSphere(_view.Position, radius);
-
-#if UNITY_EDITOR  
-        GizmosService.Instance.DrawSphere(_view.Position, radius, Color.yellow, 0.5f);
-#endif
-
-        foreach (var hit in hits)
-        {
-            // for flexibility should use InfactableMap with TryGet(Collider collider, IInfectable)
-            if (hit.TryGetComponent<IObstacleView>(out var view)) 
-            {
-                if (view.TryGetInfectable(out var infectable))
-                {
-                    infectable.Infect(power * INFECTION_DIVIDER_POWER);
-                }
-            }
-        }
+        /// Ref: implement objectPool
+        _view.SetActive(false);
     }
 }
