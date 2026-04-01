@@ -23,7 +23,8 @@ public class PlayerView : MonoBehaviour, IPlayerView
     public void SetPosition(Vector3 pos) => transform.position = pos;
     public void PlayGrounded(float mass)
     {
-        _groundedParticles.transform.localScale = Vector3.one * mass / 2;
+        float scale = Mathf.Sqrt(mass);
+        _groundedParticles.transform.localScale = Vector3.one * scale;
         _groundedParticles.Play();
     }
     /// Only for test
