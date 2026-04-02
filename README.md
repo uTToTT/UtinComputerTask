@@ -41,7 +41,7 @@ Controls:
 # 5. Architecture Overview
 
 Core systems:
-- UnityEntryPoint — single entry point;
+- UnityEntryPoint - single entry point;
 - ShotManager - control ShotControllers, which control model Shot(Pure class) and view ShotView(Monobehaviour);
 - PlayerController - control PlayerView movement and charging Shots by itself mass;
 - GameLoop - game flow like victory and defeat;
